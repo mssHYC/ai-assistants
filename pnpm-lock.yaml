@@ -11,11 +11,22 @@ importers:
       express-zod-validator:
         specifier: ^1.0.1
         version: 1.0.1(express@5.1.0)(typescript@5.8.3)
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
       zod:
         specifier: ^3.24.2
         version: 3.24.2
+    devDependencies:
+      '@types/reflect-metadata':
+        specifier: ^0.1.0
+        version: 0.1.0
 
 packages:
+
+  '@types/reflect-metadata@0.1.0':
+    resolution: {integrity: sha512-bXltFLY3qhzCnVYP5iUpeSICagQ8rc9K2liS+8M0lBcz54BHs3O6W5UvqespVSuebo1BXLi+/y9ioELAW9SC2A==}
+    deprecated: This is a stub types definition for reflect-metadata (https://github.com/rbuckton/ReflectDecorators). reflect-metadata provides its own type definitions, so you don't need @types/reflect-metadata installed!
 
   accepts@2.0.0:
     resolution: {integrity: sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng==}
@@ -224,6 +235,9 @@ packages:
     resolution: {integrity: sha512-RmkhL8CAyCRPXCE28MMH0z2PNWQBNk2Q09ZdxM9IOOXwxwZbN+qbWaatPkdkWIKL2ZVDImrN/pK5HTRz2PcS4g==}
     engines: {node: '>= 0.8'}
 
+  reflect-metadata@0.2.2:
+    resolution: {integrity: sha512-urBwgfrvVP/eAyXx4hluJivBKzuEbSQs9rKWCrCkbSxNv8mxPcUZKeuoF3Uy4mJl3Lwprp6yy5/39VWigZ4K6Q==}
+
   router@2.2.0:
     resolution: {integrity: sha512-nLTrUKm2UyiL7rlhapu/Zl45FwNgkZGaCpZbIHajDYgwlJCOzLSk+cIPAnsEqV955GjILJnKbdQC1nVPz+gAYQ==}
     engines: {node: '>= 18'}
@@ -293,6 +307,10 @@ packages:
     resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
 
 snapshots:
+
+  '@types/reflect-metadata@0.1.0':
+    dependencies:
+      reflect-metadata: 0.2.2
 
   accepts@2.0.0:
     dependencies:
@@ -512,6 +530,8 @@ snapshots:
       http-errors: 2.0.0
       iconv-lite: 0.6.3
       unpipe: 1.0.0
+
+  reflect-metadata@0.2.2: {}
 
   router@2.2.0:
     dependencies:

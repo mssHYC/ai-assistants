@@ -1,9 +1,13 @@
 import { Request, Response } from 'express';
 import { ApiResponse } from '../utils/response';
+import { Controller, Get, Post } from '../decorators/route.decorator';
+import { Validate } from '../decorators/validate.decorator';
 import { z } from 'zod';
+import { Use } from '../decorators/middleware.decorator';
+import { loggerMiddleware } from '../middlewares/loggerMiddleware';
 
-// 定义验证模式
-export const exampleSchema = z.object({
+
+const exampleSchema = z.object({
   body: z.object({
     name: z.string().min(3),
     age: z.number().min(18)
@@ -13,20 +17,23 @@ export const exampleSchema = z.object({
   })
 });
 
+@Controller('/example')
+@Use(loggerMiddleware)
 export class ExampleController {
-  static async getExample(req: Request, res: Response) {
+  @Get('/')
+  async getExample(req: Request, res: Response) {
     try {
-      // 业务逻辑
-      const data = { message: 'Hello World312' };
+      const data = { message: 'Hello World' };
       ApiResponse.success(res, data);
     } catch (err) {
       ApiResponse.error(res, 'Failed to get example', 500, err);
     }
   }
 
-  static async postExample(req: Request, res: Response) {
+  @Post('/')
+  @Validate(exampleSchema)
+  async postExample(req: Request, res: Response) {
     try {
-      // 业务逻辑
       const { name, age } = req.body;
       const result = { name, age, status: 'created' };
       ApiResponse.success(res, result, 'Example created successfully');
