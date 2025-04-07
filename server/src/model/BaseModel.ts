@@ -1,5 +1,6 @@
-import { API_KEY } from '../constants';
 import OpenAI from "openai";
+
+const API_KEY = process.env.API_KEY
 
 export interface Message {
     role: 'system' | 'user' | 'assistant',
@@ -8,7 +9,7 @@ export interface Message {
 
 class BaseModel {
     url: string = 'https://api.deepseek.com'
-    apiKey: string = API_KEY
+    apiKey: string = API_KEY!
     AIModel: OpenAI
     constructor(private model: string = "deepseek-reasoner") {
         this.AIModel = new OpenAI({ apiKey: this.apiKey, baseURL: this.url })
