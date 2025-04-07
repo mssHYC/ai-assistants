@@ -1,0 +1,6 @@
+{
+	"dependencies": {
+		"zod": "^3.24.2",
+		"express-zod-validator": "^1.0.1"
+	}
+}

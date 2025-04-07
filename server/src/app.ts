@@ -1,11 +1,17 @@
 import express, { Request, Response } from 'express';
 import BaseModel, { Message } from './model/BaseModel';
-import fs from 'fs';
+import { ExampleController, exampleSchema } from './controllers/example.controller';
+import { validate } from './middlewares/validation';
+import { errorHandler, notFoundHandler } from './middlewares/errorHandler';
 
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// 路由
+app.get('/example', ExampleController.getExample);
+app.post('/example', validate(exampleSchema), ExampleController.postExample);
 
 const port = 3000;
 
@@ -28,6 +34,12 @@ app.post('/send', async (req: Request<any, any, { messages: Message[] }>, res: R
   res.write('data: [DONE]\n\n');
   res.end();
 });
+
+// 错误处理
+app.use(notFoundHandler);
+app.use(errorHandler);
+
+export default app
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
