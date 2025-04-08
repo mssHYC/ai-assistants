@@ -23,7 +23,7 @@ export class ExampleController {
   @Get('/')
   async getExample(req: Request, res: Response) {
     try {
-      const data = { message: 'Hello World' };
+      const data = { message: 'Hello World321333321' };
       ApiResponse.success(res, data);
     } catch (err) {
       ApiResponse.error(res, 'Failed to get example', 500, err);
