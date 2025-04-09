@@ -19,11 +19,15 @@ class DeepSeekService {
   constructor() {
     this.AIModel = new OpenAI({ apiKey: this.apiKey, baseURL: this.url });
   }
-  send(messages: Message[], model: ModelType = ModelType.V3) {
+
+  send(messages: Message[], model: ModelType): any
+  send(messages: Message[], model: ModelType, stream: boolean): any
+  send(messages: Message[], model: ModelType, stream?: boolean) {
+    stream ??= false
     return this.AIModel.chat.completions.create({
-      messages: messages,
+      messages,
       model,
-      stream: true,
+      stream,
     });
   }
 }

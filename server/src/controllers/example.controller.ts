@@ -7,13 +7,19 @@ import { Use } from "../decorators/middleware.decorator";
 import { loggerMiddleware } from "../middlewares/loggerMiddleware";
 import DeepSeekService from "@/services/DeepSeek.service";
 import { Body, Params, Query } from "@/decorators/params.decorator";
+import { IsString, IsEmail, IsNumber } from 'class-validator';
+
 
 class BodyModel {
+  @IsString({ message: "name must be a string" })
   name: string;
+
+  @IsNumber()
   age: number;
 }
-class QueryModel {
-  constructor(public name: string, public age: number) {}
+interface QueryModel {
+  name: string;
+  age: number;
 }
 
 @Controller("/example")
@@ -35,7 +41,7 @@ export class ExampleController {
   @Use(loggerMiddleware)
   async postExample(
     @Body(BodyModel) body: BodyModel,
-    @Query(QueryModel) query: QueryModel,
+    @Query() query: QueryModel,
     @Params() params: any,
     req: Request,
     res: Response

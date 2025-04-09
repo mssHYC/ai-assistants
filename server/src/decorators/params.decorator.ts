@@ -21,8 +21,8 @@ export function Body(dtoType?: any) {
   return BaseParams(ParamsType.Body, dtoType);
 }
 
-export function Query(dtoType?: any) {
-  return BaseParams(ParamsType.Query, dtoType);
+export function Query() {
+  return BaseParams(ParamsType.Query, Object);
 }
 
 export function Params() {

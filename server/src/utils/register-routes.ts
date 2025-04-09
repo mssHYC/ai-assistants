@@ -1,22 +1,34 @@
-import { Router, Request } from "express";
+import { Router, Request, Response } from "express";
 import { plainToInstance } from "class-transformer";
 // import { validate } from 'class-validator';
 import { RouteDefinition } from "../decorators/route.decorator";
+import { validate } from 'class-validator';
+import { ApiResponse } from "./response";
 
-const getMethodArgs = (route: RouteDefinition, instance: any, req: Request) => {
+const getMethodArgs = async (route: RouteDefinition, instance: any, req: Request, res: Response) => {
   const args = [];
   const { index, type } =
     Reflect.getMetadata("bodyParameters", instance, route.handlerName) ?? {};
   if (index !== undefined) {
-    args[index] = type ? plainToInstance(type, req.body) : req.body;
+    if (!Object.keys(req.body).length) {
+      return Promise.reject(new Error('Body is empty'));
+    }
+    const dtoInstance = type ? plainToInstance(type, req.body) : req.body;
+    const errors = await validate(dtoInstance);
+    if (errors.length > 0) {
+      return Promise.reject(new Error(errors.join(', ')));
+    }
+    args[index] = dtoInstance
   }
   const { index: queryIndex, type: queryType } =
     Reflect.getMetadata("queryParameters", instance, route.handlerName) ?? {};
   if (queryIndex !== undefined) {
     const _query = JSON.parse(JSON.stringify(req.query));
-    args[queryIndex] = queryType
-      ? plainToInstance(queryType, req.query)
-      : _query;
+    const dtoInstance = plainToInstance(queryType, _query);
+    if (Object.keys(dtoInstance).length === 0) {
+      return Promise.reject(new Error('Query is empty'));
+    }
+    args[queryIndex] = dtoInstance;
   }
   const { index: paramsIndex } =
     Reflect.getMetadata("paramsParameters", instance, route.handlerName) ?? {};
@@ -53,9 +65,13 @@ export function registerRoutes(router: Router, controllers: any[]) {
       ];
 
       // 注册路由
-      router[method](fullPath, ...allMiddlewares, (req: any, res: any) => {
-        const args = getMethodArgs(route, instance, req);
-        instance[handlerName].apply(instance, [...args, req, res]);
+      router[method](fullPath, ...allMiddlewares, async (req: any, res: any) => {
+        try {
+          const args = await getMethodArgs(route, instance, req, res);
+          instance[handlerName].apply(instance, [...args, req, res]);
+        } catch (err) {
+          ApiResponse.error(res, (err as Error).message, 400, (err as Error).stack);
+        }
       });
     });
   });
