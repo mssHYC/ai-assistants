@@ -1,8 +1,9 @@
 # 构建阶段
-FROM node:18-alpine AS builder
+FROM docker.1ms.run/node:22-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 COPY tsconfig.json ./
+COPY pnpm-lock.yaml ./
 RUN npm install -g pnpm
 RUN npm config set registry https://registry.npmmirror.com
 RUN pnpm install
@@ -10,7 +11,7 @@ COPY . .
 RUN pnpm build
 
 # 生产阶段
-FROM node:18-alpine
+FROM docker.1ms.run/node:22-alpine
 WORKDIR /app
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist

@@ -24,6 +24,7 @@ const envSchema = z.object({
 
 // 根据环境加载不同文件
 const loadEnvFile = () => {
+  console.log(222)
   const env = process.env.NODE_ENV || 'development';
   
   require('dotenv').config({ path: `.env.${env}` });

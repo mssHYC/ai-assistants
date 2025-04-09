@@ -34,7 +34,6 @@ TAR_FILE="/tmp/app_$(date +%Y%m%d%H%M%S).tar.gz"
 tar -czvf "$TAR_FILE" \
     --exclude='node_modules' \
     --exclude='.git' \
-    --exclude='.env' \
     --exclude='dist' \
     --exclude='build' \
     --exclude='nodemon.json' \
@@ -87,12 +86,13 @@ sshpass -p "${PASSWORD}" ssh -o StrictHostKeyChecking=no "${USERNAME}@${SERVER_I
     fi
     
     # 构建新镜像
-    docker build -t ai-assistant .  --add-host=docker.io:114.114.114.114 --network host
+    docker build -t ai-assistant .
     
     # 运行新容器
     echo "启动 Docker 容器..."
     docker run -d \
         --name ai-assistant \
+        --env-file .env \
         -p 3000:3000 \
         --restart unless-stopped \
         ai-assistant

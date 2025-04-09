@@ -2,6 +2,8 @@ import OpenAI from "openai";
 
 const API_KEY = process.env.API_KEY;
 
+console.log(API_KEY,'API_KEYAPI_KEY');
+
 export interface Message {
   role: "system" | "user" | "assistant";
   content: string;
