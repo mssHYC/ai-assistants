@@ -1,44 +1,54 @@
-import { Request, Response } from 'express';
-import { ApiResponse } from '../utils/response';
-import { Controller, Get, Post } from '../decorators/route.decorator';
-import { Validate } from '../decorators/validate.decorator';
-import { z } from 'zod';
-import { Use } from '../decorators/middleware.decorator';
-import { loggerMiddleware } from '../middlewares/loggerMiddleware';
+import { Request, Response } from "express";
+import { ApiResponse } from "../utils/response";
+import { Controller, Get, Post } from "../decorators/route.decorator";
+import { Validate } from "../decorators/validate.decorator";
+import { z } from "zod";
+import { Use } from "../decorators/middleware.decorator";
+import { loggerMiddleware } from "../middlewares/loggerMiddleware";
+import DeepSeekService from "@/services/DeepSeek.service";
+import { Body, Params, Query } from "@/decorators/params.decorator";
 
+class BodyModel {
+  name: string;
+  age: number;
+}
+class QueryModel {
+  constructor(public name: string, public age: number) {}
+}
 
-const exampleSchema = z.object({
-  body: z.object({
-    name: z.string().min(3),
-    age: z.number().min(18)
-  }),
-  query: z.object({
-    debug: z.string().optional()
-  })
-});
-
-@Controller('/example')
-@Use(loggerMiddleware)
+@Controller("/example")
 export class ExampleController {
-  @Get('/')
+  model: DeepSeekService = new DeepSeekService();
+
+  @Get("/")
   async getExample(req: Request, res: Response) {
     try {
-      const data = { message: 'Hello World321333321' };
+      const data = { message: "Hello World321333321" };
       ApiResponse.success(res, data);
     } catch (err) {
-      ApiResponse.error(res, 'Failed to get example', 500, err);
+      ApiResponse.error(res, "Failed to get example", 500, err);
     }
   }
 
-  @Post('/')
-  @Validate(exampleSchema)
-  async postExample(req: Request, res: Response) {
+  @Post("/:id")
+  // @Validate(exampleSchema)
+  @Use(loggerMiddleware)
+  async postExample(
+    @Body(BodyModel) body: BodyModel,
+    @Query(QueryModel) query: QueryModel,
+    @Params() params: any,
+    req: Request,
+    res: Response
+  ) {
+    console.log(body, "body");
+    console.log(query, "query");
+    console.log(params, "params");
     try {
       const { name, age } = req.body;
-      const result = { name, age, status: 'created' };
-      ApiResponse.success(res, result, 'Example created successfully');
+      const result = { name, age, status: "created" };
+      ApiResponse.success(res, result, `${body.age} years old ${body.name}`);
     } catch (err) {
-      ApiResponse.error(res, 'Failed to create example', 500, err);
+      ApiResponse.error(res, "Failed to create example", 500, err);
     }
   }
 }
