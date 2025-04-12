@@ -2,13 +2,25 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/server.js",
+  "bin": "dist/server.js",
   "scripts": {
     "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "pnpm build && nodemon",
     "build": "rm -rf dist && tsc && tsc-alias",
-    "pb": "chmod +x ./build/deploy.sh && ./build/deploy.sh"
+    "pb": "chmod +x ./build/deploy.sh && ./build/deploy.sh",
+    "package": "rm -rf bin && pnpm build && pkg . --out-path bin"
+  },
+  "pkg": {
+    "scripts": "dist/**/*.js",
+    "assets": [
+      ".env*"
+    ],
+    "targets": [
+      "node18-linux-x64",
+      "node18-macos-x64"
+    ]
   },
   "keywords": [],
   "author": "",
@@ -17,19 +29,19 @@
     "body-parser": "^2.2.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "express-zod-validator": "^1.0.1",
     "openai": "^4.93.0",
     "reflect-metadata": "^0.2.2",
-    "zod": "^3.24.2",
-    "dotenv": "^16.4.7"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/express": "^5.0.1",
     "@types/node": "^22.14.0",
     "@types/reflect-metadata": "^0.1.0",
-    "module-alias": "^2.2.3",
     "nodemon": "^3.1.9",
+    "pkg": "^5.8.1",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.13",
     "tsconfig-paths": "^4.2.0",
