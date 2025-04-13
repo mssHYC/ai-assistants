@@ -9,17 +9,20 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "pnpm build && nodemon",
     "build": "rm -rf dist && tsc && tsc-alias",
-    "pb": "chmod +x ./build/deploy.sh && ./build/deploy.sh",
+    "pb": "pnpm build && chmod +x ./build/deploy.sh && ./build/deploy.sh",
     "package": "rm -rf bin && pnpm build && pkg . --out-path bin"
   },
   "pkg": {
     "scripts": "dist/**/*.js",
     "assets": [
-      ".env*"
+      ".env*",
+      "node_modules/puppeteer-core/**/*",
+      "public/**/*",
+      "node_modules/chrome-launcher/**/*"
     ],
     "targets": [
-      "node18-linux-x64",
-      "node18-macos-x64"
+      "node18-linux-arm64",
+      "node18-macos-arm64"
     ]
   },
   "keywords": [],
@@ -33,6 +36,7 @@
     "express": "^5.1.0",
     "express-zod-validator": "^1.0.1",
     "openai": "^4.93.0",
+    "puppeteer": "^24.6.1",
     "reflect-metadata": "^0.2.2",
     "zod": "^3.24.2"
   },

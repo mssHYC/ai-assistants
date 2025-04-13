@@ -8,6 +8,9 @@ import { loggerMiddleware } from "../middlewares/loggerMiddleware";
 import DeepSeekService from "@/services/DeepSeek.service";
 import { Body, Params, Query } from "@/decorators/params.decorator";
 import { IsString, IsEmail, IsNumber } from 'class-validator';
+import Browser from "@/model/Browser";
+import path from "path";
+import { ensureDirExists, getStorageDir } from "@/utils/paths";
 
 
 class BodyModel {
@@ -55,6 +58,54 @@ export class ExampleController {
       ApiResponse.success(res, result, `${body.age} years old ${body.name}`);
     } catch (err) {
       ApiResponse.error(res, "Failed to create example", 500, err);
+    }
+  }
+
+  @Get("/open-chrome")
+  @Validate(z.object({
+    query: z.object({
+      path: z.string(),
+      id: z.string(),
+    })
+  }))
+  async openChrome(@Query() query: { path: string; id: string }, req: Request, res: Response) {
+    console.log(query, 'query')
+    // @ts-ignore
+    // 启动无头浏览器
+    const browser = await Browser.create();
+    try {
+      // 创建新页面
+      const page = await browser.newPage();
+      // 导航到目标网页
+      await page.goto(query.path, {
+        waitUntil: 'networkidle2', // 等待网络空闲
+        timeout: 30000             // 30秒超时
+      });
+
+      // 执行页面操作
+      const title = await page.title();
+      let file
+      console.log('页面标题:', title);
+      if (process.env.NODE_ENV === 'docker') {
+        file = await page.screenshot({
+          fullPage: true
+        });
+      } else {
+        ensureDirExists('screenshot');
+        // 截图保存
+        file = await page.screenshot({
+          path: path.join(getStorageDir('screenshot'), query.id + '.png'),
+          fullPage: true
+        });
+      }
+
+      ApiResponse.success(res, Buffer.from(file).toString('base64'));
+    } catch (err) {
+      console.log(err)
+      ApiResponse.error(res, "Failed to get example", 500, err);
+    } finally {
+      // 关闭浏览器
+      await browser.close();
     }
   }
 }

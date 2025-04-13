@@ -37,6 +37,7 @@ tar -czvf "$TAR_FILE" \
     --exclude='dist' \
     --exclude='build' \
     --exclude='nodemon.json' \
+    --exclude='bin' \
     -C "$LOCAL_DIR" .
 
 # ---------------------------
