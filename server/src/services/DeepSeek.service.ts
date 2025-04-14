@@ -1,8 +1,9 @@
+import { Service } from "@/decorators/service.decorator";
 import OpenAI from "openai";
 
 const API_KEY = process.env.API_KEY;
 
-console.log(API_KEY,'API_KEYAPI_KEY');
+console.log(API_KEY, "API_KEYAPI_KEY");
 
 export interface Message {
   role: "system" | "user" | "assistant";
@@ -14,6 +15,7 @@ export enum ModelType {
   V3 = "deepseek-chat",
 }
 
+@Service()
 class DeepSeekService {
   url: string = "https://api.deepseek.com";
   apiKey: string = API_KEY!;
@@ -22,10 +24,10 @@ class DeepSeekService {
     this.AIModel = new OpenAI({ apiKey: this.apiKey, baseURL: this.url });
   }
 
-  send(messages: Message[], model: ModelType): any
-  send(messages: Message[], model: ModelType, stream: boolean): any
+  send(messages: Message[], model: ModelType): any;
+  send(messages: Message[], model: ModelType, stream: boolean): any;
   send(messages: Message[], model: ModelType, stream?: boolean) {
-    stream ??= false
+    stream ??= false;
     return this.AIModel.chat.completions.create({
       messages,
       model,
