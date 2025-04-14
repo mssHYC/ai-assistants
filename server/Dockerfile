@@ -19,9 +19,7 @@ RUN apt-get update && apt-get install -y \
     fonts-freefont-ttf \
     libxss1 \
     --no-install-recommends
-ENV NODE_ENV=docker \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium \
-    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true 
+ENV NODE_ENV=docker 
 WORKDIR /app
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
