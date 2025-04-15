@@ -1,20 +1,35 @@
-import express, { Application } from 'express';
-import { errorHandler, notFoundHandler } from './middlewares/errorHandler';
-import { ExampleController } from './controllers/example.controller';
-import { registerRoutes } from './utils/register-routes';
-import 'reflect-metadata';
-import { streamErrorHandler } from './middlewares/streamErrorHandler';
-import { StreamController } from './controllers/stream.controller';
-import { DeepSeekController } from './controllers/deepseek.controller';
+import "reflect-metadata";
+import express, { Application } from "express";
+import { errorHandler, notFoundHandler } from "./middlewares/errorHandler";
+import cors from "cors";
+import { ExampleController } from "./controllers/example.controller";
+import { registerRoutes } from "./utils/register-routes";
+import { streamErrorHandler } from "./middlewares/streamErrorHandler";
+import { StreamController } from "./controllers/stream.controller";
+import { DeepSeekController } from "./controllers/deepseek.controller";
 
 const app: Application = express();
+
+const corsOptions = {
+  origin: "http://localhost:3000", // 允许单个来源
+  methods: ['POST'], // 允许的方法
+  allowedHeaders: ['Content-Type', 'Authorization'], // 允许的头信息
+  credentials: true, // 允许发送凭证（如 cookies）
+  optionsSuccessStatus: 200, // 预检请求的成功状态码
+};
+
+app.use(cors(corsOptions));
 
 // 中间件
 app.use(express.json());
 
 // 注册路由
 const router = express.Router();
-registerRoutes(router, [ExampleController, DeepSeekController, StreamController]);
+registerRoutes(router, [
+  ExampleController,
+  DeepSeekController,
+  StreamController,
+]);
 app.use(router);
 
 // 错误处理

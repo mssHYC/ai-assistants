@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "pnpm build && nodemon",
+    "dev": "nodemon",
     "build": "rm -rf dist && tsc && tsc-alias",
     "pb": "pnpm build && chmod +x ./build/deploy.sh && ./build/deploy.sh",
     "package": "rm -rf bin && pnpm build && pkg . --out-path bin"
@@ -32,6 +32,7 @@
     "body-parser": "^2.2.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "express-zod-validator": "^1.0.1",
@@ -41,6 +42,7 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
     "@types/node": "^22.14.0",
     "@types/reflect-metadata": "^0.1.0",
