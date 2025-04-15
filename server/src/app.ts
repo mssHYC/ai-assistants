@@ -11,10 +11,10 @@ import { DeepSeekController } from "./controllers/deepseek.controller";
 const app: Application = express();
 
 const corsOptions = {
-  origin: "http://localhost:3000", // 允许单个来源
-  methods: ['POST'], // 允许的方法
-  allowedHeaders: ['Content-Type', 'Authorization'], // 允许的头信息
-  credentials: true, // 允许发送凭证（如 cookies）
+  origin: "*", // 允许单个来源
+  methods: ["GET", "POST", "PUT", "DELETE"], // 允许的方法
+  allowedHeaders: ["Content-Type", "Authorization"], // 允许的头信息
+  credentials: false, // 允许发送凭证（如 cookies）
   optionsSuccessStatus: 200, // 预检请求的成功状态码
 };
 

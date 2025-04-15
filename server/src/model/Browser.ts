@@ -1,13 +1,12 @@
 import puppeteer from "puppeteer";
-
 // 动态路径解析
 const getChromePath = () => {
-    //@ts-ignore
-    if (process.pkg) { // 打包环境
-        return process.platform === 'darwin'
-            ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-            : process.env.PUPPETEER_EXECUTABLE_PATH;
-    }
+    // //@ts-ignore
+    // if (process.pkg) { // 打包环境
+    //     return process.platform === 'darwin'
+    //         ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+    //         : process.env.PUPPETEER_EXECUTABLE_PATH;
+    // }
     if (process.env.NODE_ENV === 'docker') {
         return process.env.PUPPETEER_EXECUTABLE_PATH;
     }
