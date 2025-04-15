@@ -9,7 +9,6 @@ import DeepSeekService from "@/services/DeepSeek.service";
 import { Body, Params, Query } from "@/decorators/params.decorator";
 import { IsString, IsEmail, IsNumber } from "class-validator";
 import Browser from "@/model/Browser";
-import path from "path";
 import { ensureDirExists, getStorageDir } from "@/utils/paths";
 
 class BodyModel {

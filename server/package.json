@@ -10,16 +10,10 @@
     "dev": "nodemon",
     "build": "rm -rf dist && tsc && tsc-alias",
     "pb": "pnpm build && chmod +x ./build/deploy.sh && ./build/deploy.sh",
-    "package": "rm -rf bin && pnpm build && pkg . --out-path bin"
+    "package": "rm -rf bin && pnpm build && pkg . --out-path bin --debug"
   },
   "pkg": {
     "scripts": "dist/**/*.js",
-    "assets": [
-      ".env*",
-      "node_modules/puppeteer-core/**/*",
-      "public/**/*",
-      "node_modules/chrome-launcher/**/*"
-    ],
     "targets": [
       "node18-linux-arm64",
       "node18-macos-arm64"
