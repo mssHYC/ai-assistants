@@ -12,7 +12,7 @@ import Browser from "@/model/Browser";
 import { ensureDirExists, getStorageDir } from "@/utils/paths";
 
 class BodyModel {
-  @IsString({ message: "name must be a string" })
+  @IsString()
   name: string;
 
   @IsNumber()
@@ -42,13 +42,11 @@ export class ExampleController {
   @Use(loggerMiddleware)
   async postExample(
     @Body(BodyModel) body: BodyModel,
-    @Query() query: QueryModel,
     @Params() params: any,
     req: Request,
     res: Response
   ) {
     console.log(body, "body");
-    console.log(query, "query");
     console.log(params, "params");
     try {
       const { name, age } = req.body;

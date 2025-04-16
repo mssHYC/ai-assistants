@@ -15,8 +15,16 @@ const getMethodArgs = async (route: RouteDefinition, instance: any, req: Request
     }
     const dtoInstance = type ? plainToInstance(type, req.body) : req.body;
     const errors = await validate(dtoInstance);
-    if (errors.length > 0) {
-      return Promise.reject(new Error(errors.join(', ')));
+    const errorsText = errors.map((error) => {
+      if(error.constraints) {
+        return Object.values(error.constraints).join(', ')
+      }else{
+        return error.toString()
+      }
+    })
+    if (errorsText.length > 0) {
+      
+      return Promise.reject(new Error(errorsText.join(', ')));
     }
     args[index] = dtoInstance
   }
