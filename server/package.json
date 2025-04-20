@@ -30,6 +30,7 @@
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "express-zod-validator": "^1.0.1",
+    "mongodb": "^6.15.0",
     "openai": "^4.93.0",
     "puppeteer": "^24.6.1",
     "reflect-metadata": "^0.2.2",
@@ -38,6 +39,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
+    "@types/mongodb": "^4.0.7",
     "@types/node": "^22.14.0",
     "nodemon": "^3.1.9",
     "pkg": "^5.8.1",

@@ -10,6 +10,7 @@ import { Body, Params, Query } from "@/decorators/params.decorator";
 import { IsString, IsEmail, IsNumber } from "class-validator";
 import Browser from "@/model/Browser";
 import { ensureDirExists, getStorageDir } from "@/utils/paths";
+import DB from "@/model/MongoDB";
 
 class BodyModel {
   @IsString()
@@ -108,6 +109,17 @@ export class ExampleController {
     } finally {
       // 关闭浏览器
       await browser.close();
+    }
+  }
+
+  @Get('/connect-mongo')
+  async connectMongo(req: Request, res: Response) {
+    try {
+      const _res = await DB.insertOne('users', { name: 'John', age: 30 });
+      console.log(_res)
+      ApiResponse.success(res, _res)
+    } catch (err) {
+      ApiResponse.error(res, "Failed to get example", 500, err);
     }
   }
 }

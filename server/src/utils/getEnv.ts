@@ -9,14 +9,13 @@ const envSchema = z.object({
   API_KEY: z.string(),
   PUPPETEER_EXECUTABLE_PATH: z.string(),
   PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: z.string(),
-  //   API_PREFIX: z.string().default('/api'),
 
-  // 数据库配置
-  //   DB_HOST: z.string(),
-  //   DB_PORT: z.coerce.number().default(5432),
-  //   DB_NAME: z.string(),
-  //   DB_USER: z.string(),
-  //   DB_PASSWORD: z.string(),
+  // MongoDB配置
+  MONGO_URI: z.string().default('mongodb://localhost:27017'),
+  MONGO_DB_NAME: z.string().default('ai-assistants'),
+  MONGO_USERNAME: z.string().optional(),
+  MONGO_PASSWORD: z.string().optional(),
+  MONGO_AUTH_SOURCE: z.string().default('admin'),
 
   // 安全配置
   //   JWT_SECRET: z.string().optional(),
