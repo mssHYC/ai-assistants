@@ -112,14 +112,14 @@ export class ExampleController {
     }
   }
 
-  @Get('/connect-mongo')
+  @Get("/connect-mongo")
   async connectMongo(req: Request, res: Response) {
     try {
-      const _res = await DB.insertOne('users', { name: 'John', age: 30 });
-      console.log(_res)
-      ApiResponse.success(res, _res)
+      const _res = await DB.insertOne("ai-assistants1312", { name: "222", age: 3330 });
+      ApiResponse.success(res, _res);
     } catch (err) {
-      ApiResponse.error(res, "Failed to get example", 500, err);
+      // @ts-ignore
+      ApiResponse.error(res, err.toString(), 500, err);
     }
   }
 }
