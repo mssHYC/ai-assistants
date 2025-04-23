@@ -1,4 +1,4 @@
-import { MongoClient, Db, Collection, Document, OptionalUnlessRequiredId } from 'mongodb';
+import { MongoClient, Db, Collection, Document, OptionalUnlessRequiredId, CreateCollectionOptions, Filter } from 'mongodb';
 import { config } from '../utils/getEnv';
 
 class MongoDB {
@@ -6,15 +6,15 @@ class MongoDB {
   private client: MongoClient;
   private db: Db | null = null;
 
-  private constructor() {
+  constructor() {
     const username = encodeURIComponent(config.MONGO_USERNAME || '');
     const password = encodeURIComponent(config.MONGO_PASSWORD || '');
     const authSource = config.MONGO_AUTH_SOURCE || 'admin';
     const dbName = config.MONGO_DB_NAME || 'ai-assistants';
-    
-    const uri = config.MONGO_URI || 
+
+    const uri = config.MONGO_URI ||
       `mongodb://${username}:${password}@localhost:27017/${dbName}?authSource=${authSource}`;
-    
+
     this.client = new MongoClient(uri, {
       connectTimeoutMS: 5000,
       socketTimeoutMS: 30000,
@@ -57,26 +57,26 @@ class MongoDB {
     return collection.insertOne(doc);
   }
 
-  public async findOne<T extends Document>(collectionName: string, query: object) {
+  public async findOne<T extends Document>(collectionName: string, query: Filter<Document>) {
     const collection = await this.getCollection<T>(collectionName);
     return collection.findOne(query);
   }
 
-  public async findMany<T extends Document>(collectionName: string, query: object = {}) {
+  public async findMany<T extends Document>(collectionName: string, query: Filter<Document> = {}) {
     const collection = await this.getCollection<T>(collectionName);
     return collection.find(query).toArray();
   }
 
   public async updateOne<T extends Document>(
-    collectionName: string, 
-    filter: object, 
+    collectionName: string,
+    filter: Filter<Document>,
     update: Partial<T>
   ) {
     const collection = await this.getCollection<T>(collectionName);
     return collection.updateOne(filter, { $set: update });
   }
 
-  public async deleteOne(collectionName: string, filter: object) {
+  public async deleteOne(collectionName: string, filter: Filter<Document>) {
     const collection = await this.getCollection(collectionName);
     return collection.deleteOne(filter);
   }
@@ -88,14 +88,7 @@ class MongoDB {
    */
   public async createCollection(
     name: string,
-    options?: {
-      capped?: boolean;
-      size?: number;
-      max?: number;
-      validator?: object;
-      validationLevel?: string;
-      validationAction?: string;
-    }
+    options?: CreateCollectionOptions
   ) {
     const db = await this.connect();
     return db.createCollection(name, options);

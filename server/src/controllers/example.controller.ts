@@ -11,6 +11,8 @@ import { IsString, IsEmail, IsNumber } from "class-validator";
 import Browser from "@/model/Browser";
 import { ensureDirExists, getStorageDir } from "@/utils/paths";
 import DB from "@/model/MongoDB";
+import { StreamUtils } from "@/utils/stream";
+import fs from "fs";
 
 class BodyModel {
   @IsString()
@@ -87,22 +89,28 @@ export class ExampleController {
 
       // 执行页面操作
       const title = await page.title();
-      let file;
       console.log("页面标题:", title);
-      if (process.env.NODE_ENV === "docker") {
-        file = await page.screenshot({
-          fullPage: true,
-        });
-      } else {
-        ensureDirExists(["screenshot"]);
-        // 截图保存
-        file = await page.screenshot({
-          path: getStorageDir(["screenshot", `${query.id}.png`]),
-          fullPage: true,
-        });
-      }
+      const originalPath = getStorageDir(["storage", "screenshot", `${query.id}`]);
+      ensureDirExists(["storage", "screenshot", `${query.id}`]);
+      const srcs = await page.$$(".message-body .tile-item[data-fancybox='gallery'] img");
+      for (const img of srcs) {
+        const src = await img.evaluate(el => el.src);
+        const page = await browser.newPage();
+        //@ts-ignore
+        await page.goto(src.replace('_s_', '_l_'), {
+          waitUntil: "networkidle2", // 等待网络空闲
+          timeout: 30000, // 30秒超时
 
-      ApiResponse.success(res, Buffer.from(file).toString("base64"));
+        });
+        const imgEl = await page.$("img")!
+        await imgEl?.screenshot({
+          path: getStorageDir(["storage", "screenshot", `${query.id}`, `${srcs.indexOf(img)}.png`]),
+        })
+        await page.close();
+      }
+      await page.close();
+      ApiResponse.success(res, 'The task is done, can start the next task');
+      // await StreamUtils.streamFile(res, paths);
     } catch (err) {
       console.log(err);
       ApiResponse.error(res, "Failed to get example", 500, err);
@@ -115,8 +123,11 @@ export class ExampleController {
   @Get("/connect-mongo")
   async connectMongo(req: Request, res: Response) {
     try {
-      const _res = await DB.insertOne("ai-assistants1312", { name: "222", age: 3330 });
+      console.log(new Date().toString());
+      const _res = await DB.findMany('test');
       ApiResponse.success(res, _res);
+      DB.disconnect();
+
     } catch (err) {
       // @ts-ignore
       ApiResponse.error(res, err.toString(), 500, err);

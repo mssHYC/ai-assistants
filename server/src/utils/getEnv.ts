@@ -7,8 +7,8 @@ const envSchema = z.object({
     .default("development"),
   PORT: z.coerce.number().default(3000),
   API_KEY: z.string(),
-  PUPPETEER_EXECUTABLE_PATH: z.string(),
-  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: z.string(),
+  PUPPETEER_EXECUTABLE_PATH: z.string().optional(),
+  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: z.string().optional(),
 
   // MongoDB配置
   MONGO_URI: z.string().default('mongodb://localhost:27017'),

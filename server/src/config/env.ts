@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 // 根据环境加载不同文件
 const loadEnvFile = () => {
   const env = process.env.NODE_ENV || "development";

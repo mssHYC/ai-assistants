@@ -39,13 +39,13 @@ export class StreamUtils {
   }
 
   // 文件流传输
-  static streamFile(res: Response, filePath: string) {
-    // const { createReadStream } = require("fs");
+  static streamFile(res: Response, filePath: string, cb?: () => void) {
     console.log(filePath);
     const stream = createReadStream(filePath);
 
     stream.on("open", () => {
       stream.pipe(res);
+      cb?.();
     });
 
     stream.on("error", (err: Error) => {
