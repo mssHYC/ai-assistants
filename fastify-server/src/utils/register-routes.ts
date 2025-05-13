@@ -9,12 +9,20 @@ export const registerRoutes = (app: FastifyInstance, controllers: any[]) => {
       method: Methods;
       handler: Function;
     }[] = Reflect.getMetadata(ROUTE_METADATA_KEY, controller.prototype) || [];
-    const cls = new controller()
+    const cls = new controller();
     const basePath = cls.basePath;
     metadata.forEach(({ path, method, handler }) => {
-      app[method](`${basePath}${path}`, (request, reply) => {
-        handler.call(cls, request, reply);
-      });
+      app[method](
+        `${basePath}${path}`,
+        {
+          config: {
+            skipWrap: false,
+          },
+        },
+        (request, reply) => {
+          handler.call(cls, request, reply);
+        }
+      );
     });
   });
 };
